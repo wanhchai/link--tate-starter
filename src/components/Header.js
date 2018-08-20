@@ -1,11 +1,16 @@
 import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { getPageNameQuery, getPageNameOptions } from '../graphql';
+import { Query } from 'react-apollo';
+import { getPageNameQuery } from '../graphql';
 
-const Header = props => {
-    return (
-        <h1>{props.currentPageName}</h1>
-    )
-};
+const Header = () => (
+    <Query query={getPageNameQuery}>
+        {({ loading, error, data }) => {
+            if (error) return <h1>Error...</h1>;
+            if (loading || !data) return <h1>Loading...</h1>;
 
-export default compose(graphql(getPageNameQuery, getPageNameOptions))(Header);
+            return <h1>{data.apolloClientDemo.currentPageName}</h1>
+        }}
+    </Query>
+);
+
+export default Header;
